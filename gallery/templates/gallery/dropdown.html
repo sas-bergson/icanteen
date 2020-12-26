@@ -1,0 +1,47 @@
+<style>
+        .price{
+        color: #474E5D;
+    }
+     .name{
+        color: #474E5D;
+    }
+
+   .dropdown{
+         float: right;
+        position: relative;
+         display: inline-block;
+         margin: 10px;
+     }
+
+</style>
+
+   <!---------------------------------- dropdown-------------------------------------->
+ <div class="container">
+  <div class="row">
+ <!---------------------------------- view ----------------------------------->
+ <div class="col-sm-6">
+  <div class="view">
+    <div class="dropdown">
+       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style = "background-color:#474E5D">View Type
+        <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a class="glyphicon glyphicon-stop" href={% url 'extralargeview' %}> ExtraLarge </a></li>
+                <li><a class="glyphicon glyphicon-unchecked" href={% url 'largeview' %}> Large </a></li>
+                <li><a class="glyphicon glyphicon-th-large" href={% url 'mediumview' %}> Medium  </a></li>
+                <li><a class="glyphicon glyphicon-th" href={% url 'smallview' %}> Small</a></li>
+                <li><a class="glyphicon glyphicon-th-list" href={% url 'listview' %}> List</a></li>
+                <li><a class="glyphicon glyphicon-align-justify" href={% url 'detailview' %}> Details</a></li>
+                <li><a class=" glyphicon glyphicon-list-alt" href={% url 'smallview' %}> Tiles</a></li>
+                <li><a class=" glyphicon glyphicon-list-alt" href={% url 'smallview' %}> Content</a></li>
+              </ul>
+    </div>
+</div>
+
+     <!---------------------------------- category----------------------------------->
+
+</div>
+</div>
+</div>
+
+
+

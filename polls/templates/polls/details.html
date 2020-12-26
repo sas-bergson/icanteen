@@ -1,0 +1,62 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Details of question</title>
+  <meta name="description" content="Details on Questions">
+  <meta name="Daniel Moune (Instructor)" content="Object Oriented Software Engineering Course Labs">
+
+  {% load static %}
+  <script src="{% static "polls/js/includeHtml.js" %}"></script>
+
+  <!--
+       <link rel="stylesheet" href="css/styles.css?v=1.0">
+       <script src="js/scripts.js"></script>
+  -->
+
+</head>
+
+<body>
+
+    <!-------------Include the page header------------------>
+
+    {% load static %}
+    <div class= header include-html="{% static "polls/html/header.html" %}"></div>
+
+    <!------------------------------------------------------>
+
+
+    <div class="contents">
+        <div class="question">
+            <span style="width:100px; margin-right:20px">{{ question.text  }}</span><span style="width:100px">{{ question.publication_date  }}</span>
+        </div>
+        <div class="choice_list">
+                {% if choice_list %}
+                <ol>
+                    {% for c in choice_list %}
+                    <li class="choice">
+                        <span style="width:100px; margin-right:20px">{{ c.text  }}</span> <span style="width:100px">{{ c.votes  }} Votes</span>
+                    </li>
+                    {% endfor  %}
+                </ol>
+                {% else  %}
+                <br/>No votes at the moment.
+                {% endif  %}
+        </div>
+    </div>
+
+    <!-------------Include the page footer------------------>
+    {% load static %}
+    <div class="footer" include-html="{% static "polls/html/footer.html" %}"></div>
+
+    <!------------------------------------------------------>
+
+    <script>includeHTML();</script>
+
+</body>
+
+
+</html>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<img class="img-thumbnail"
+        src = "{{ media_url }}{{ img_thumb_url }}"
+        alt="{{ media_url }}{{ img_thumb_url }}"
+><br/><br/>
+<span style="color: black; font-size: 12pt">media_root = {{ media_root }}</span><br/><br/>
+<span style="color: black; font-size: 12pt">media_url = {{ media_url }}</span><br/><br/>
+<span style="color: black; font-size: 12pt">thumb_status = {{ thumb_status }}</span><br/><br/>
+<span style="color: black; font-size: 12pt">img_url = {{ img_url }}</span><br/><br/>
+<span style="color: black; font-size: 12pt">img_thumb_url = {{ img_thumb_url }}</span>
+<script>
+    $(".img-thumbnail").each(
+        function(){
+            img_number = $(".img-thumbnail").index(this);
+            console.log($(this).attr('src'));
+        }
+    );
+</script>
+{% endblock %}

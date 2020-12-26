@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'gallery/search.html' %}
+{% include 'gallery/dropdown.html' %}
+<!---------------------------------- Wall ----------------------------------->
+{% for category in categories %}
+ <h3>{{ category.name }}</h3>
+    {% for product in category.products.all %}
+{% include 'gallery/display_product.html' %}
+{% endfor %}
+{% endfor %}
+{% endblock %}

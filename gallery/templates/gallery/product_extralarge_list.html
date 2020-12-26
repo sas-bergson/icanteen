@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'gallery/search.html' %}
+{% include 'gallery/dropdown.html' %}
+{% load static %}
+<style>
+    @media (min-width: 992px) {
+        body {
+        padding-top: 56px;
+        }
+    }
+
+        .price{
+        color: #474E5D;
+    }
+     .name{
+        color: #474E5D;
+    }
+
+    .list{
+        float: right;
+        position: relative;
+         display: inline-block;
+    }
+
+       #sidebar{
+        margin-top : 70px;
+
+    }
+
+    .paint{
+       background-color :#F3F3F3;
+    }
+    .paintt{
+       height: 100%;
+    }
+
+    .list-group-item{
+
+        padding :5px;
+        background-color :#F3F3F3
+    }
+    .list-group a{
+      text-decoration: none;
+    }
+
+     li:hover{
+        background-color :#A9A9A9
+    }
+
+
+</style>
+
+<!---------------------------------- Wall ----------------------------------->
+
+   <div class = "paintt">
+   <div class="col-sm-2 sidebar-offcanvas" id="sidebar">
+          <div class="list-group">
+              <div class="form-group">
+               <ul class="list-group">
+                <Li class ="list-group-item active" style = "background-color:#474E5D">Categories</li>
+                <Li class ="list-group-item" class="selected"><a href="{% url 'product_list' %}" style = "color:#474E5D">All</a></li>
+                    {% for c in categories %}
+                <li {% if category.slug == c.slug %}class="selected" {% endif %} class="list-group-item">
+                   <a href="{{ c.get_absolute_url }}" style = "color:#474E5D" >{{ c.name }}</a></li>
+                    {% endfor %}
+            </ul>
+            </div>
+          </div>
+        </div><!--/.sidebar-offcanvas-->
+        </div>
+
+<div class="container">
+    <div class = "row">
+    <div class = "col-sm-10">
+    <div class = "list">
+    <h1 class="my-4 text-center text-lg-left">{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
+    <h1 class="my-4 text-center text-lg-left">{% if query %}{{ query }}{% endif %}</h1>
+    <div class ="paint">
+    <div class="row text-center text-lg-left">
+        {% for object in object_list %}
+        <div class="col-lg-5 col-md-10 col-sm-10 col-xs-12" style="margin-top: 30px; margin-left: 50px;">
+            <a href="{{object.get_absolute_url}}" class="d-block mb-4 h-100">
+                <img class="img-thumbnail"
+                    src = "{% static 'gallery/img/loading.gif' %}"
+                    alt="{{ object.name }}"
+                    data-url = "{{object.image_url}}"/>
+            </a>
+            <div>
+                <h5 class = "name"><b>{{ object.designation }}</b></h5>
+                <h5 class = "price"><b>Price:</b> {{ object.price}}CFA</h5>
+                <h6 class = "price"><b>Description:</b>  {{ object.description|truncatewords:5}}</h6>
+                 <div class="btn-group btn-groupe_2">
+                   <button type="button" class="btn btn-primary" style = "background-color:#474E5D">Add to Cart
+                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                   </button>
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+{% include 'gallery/pagination.html' %}
+</div>
+
+<script>
+       $(".img-thumbnail").each(
+        function(){
+            img_number = $(".img-thumbnail").index(this);
+            console.log("loading image number "+ img_number);
+            var p = $(this).parent();
+            var dat_url = $(this).attr('data-url').split('/',4)[3];
+            var url_split = dat_url.split('.');
+            var url = url_split[0] + '_extralargethumb.' + url_split[1];
+
+            //var url1_split = url.split('/',4)[3]);
+
+            console.log('Data Url With the split = '+ dat_url);
+            console.log('Data Url With the split = '+$(this).attr('data-url').split('.')[1]);
+            console.log('Data Url With the split = '+ url);
+            console.log('Data Url  = '+ dat_url);
+
+            console.log('Data Url Without the split = '+$(this).attr('data-url'));
+            //console.log('Data Url Without the split = '+ url1_split);
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+                dataType: "html",
+                success: function(response) {
+                    console.log(response)
+                    p.html(response);
+                },
+                error: function (xhr, status) {
+                  p.html("Error: " + xhr.status + ": " + xhr.statusText);
+                }
+            });
+        }
+    );
+
+</script>
+{% endblock %}
+

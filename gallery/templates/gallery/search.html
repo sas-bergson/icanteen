@@ -1,0 +1,31 @@
+ <style>
+
+.sch {
+   padding-top:5px;
+
+}
+
+ </style>
+ <div class="search">
+ <div class="col-sm-6" >
+  <form class="navbar-form navbar-left" name="myForm" method='GET' action="{% url 'search' %}" onsubmit="return validateForm()">
+      <div class="form-group">
+          <div class = "sch">
+        <input type="text" class="form-control" placeholder="Search Product . . ." name="q" value="{{request.GET.q}}">
+      <button type="submit" class="btn btn-primary" style = "background-color:#474E5D"><span class="glyphicon glyphicon-search"></span></button>
+      </div>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  <script>
+function validateForm() {
+    var x = document.forms["myForm"]["q"].value;
+    if (x == "") {
+        alert("Fill in product name");
+        return false;
+    }
+}
+
+</script>

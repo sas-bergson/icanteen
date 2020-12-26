@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Wellcome to Django Developers Polls</title>
+  <meta name="description" content="Questions and votes on running campaigns for the ICanteen Project in ICT University">
+  <meta name="Daniel Moune (Instructor)" content="Object Oriented Software Engineering Course Labs">
+
+  {% load static %}
+  <script src="{% static "polls/js/includeHtml.js" %}"></script>
+
+  <!--
+       <link rel="stylesheet" href="css/styles.css?v=1.0">
+       <script src="js/scripts.js"></script>
+  -->
+
+</head>
+
+<body>
+
+    <!-------------Include the page header------------------>
+
+    {% load static %}
+    <div class= header include-html="{% static "polls/html/header.html" %}"></div>
+
+    <!------------------------------------------------------>
+
+
+    <div class="contents">
+        <p>
+        {% if question_list %}
+          <ol>
+             {% for q in question_list %}
+             <li>
+                <a href="/polls/{{ q.id  }}"  >{{ q.text  }}
+                </a>
+             </li>
+             {% endfor  %}
+          </ol>
+        {% else  %}
+          <br/>No Polls available at the moment.
+        {% endif  %}
+        </p>
+    </div>
+
+    <!-------------Include the page footer------------------>
+    {% load static %}
+    <div class="footer" include-html="{% static "polls/html/footer.html" %}"></div>
+
+    <!------------------------------------------------------>
+
+    <script>includeHTML();</script>
+
+</body>
+
+
+</html>

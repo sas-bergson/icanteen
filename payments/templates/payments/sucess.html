@@ -1,0 +1,49 @@
+<html>
+    <head>
+     <meta charset="utf-8">
+    <title>Icanteen Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=yes">
+    <meta name="description" content="The number one Online Canteen Management Project">
+    <meta name="Context" content="Object Oriented Software Engineering Course">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <style>
+    h1{
+        padding: 20px;
+        margin-top: 10%;
+        margin-bottom: 10%;
+    }
+    .mcontainer{
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        margin: 20px 20px
+    }
+
+    </style>
+     </head>
+
+<body>
+<div class="mcontainer">
+  <h1 class="display-3" align ="center">Thank You!</h1>
+  <p id="text" class="lead" align = "center"><strong>Your payment will be processed shortly!!!</strong> </p>
+  <hr>
+  <div class="container" align="center">
+    <div class="row" style="margin-top: 2%">
+         <a href="{% url 'makepayment' %}"><button class="btn btn-primary" style=" background-color: #474E5D;">
+          Go Home
+         </button></a>
+    </div>
+</div>
+</div>
+</body>
+{% include 'gallery/footer.html' %}
+</html>
+
+

@@ -1,0 +1,34 @@
+<img class="img-thumbnail"
+        src = "{{ media_url }}{{ img_thumb_url }}"
+        alt="{{ media_url }}{{ img_thumb_url }}">
+<script>
+    $(".img-thumbnail").each(
+        function(){
+
+            var p = $(this).parent();
+
+            var url_part_1 = $(this).attr('img_thumb_url').split('/',2)[1];
+            var full_thumb_url = $(this).attr('media_url')+ 'product'+ '/' + url_part_1;
+
+            console.log('media Url = '+$(this).attr('media_url'));
+            console.log('img_thumb_url = '+$(this).attr('img_thumb_url'));
+            console.log('full thumb url With the split = '+ full_thumb_url);
+
+             //$(this).setAttribute('src', full_thumb_url);
+             //$(this).setAttribute('alt', full_thumb_url);
+
+            $.ajax({
+                type: "GET",
+                url: $(this).attr('media_url')+ 'product'+ '/' + url_part_1;,
+                contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+                dataType: "html",
+                success: function(response) {
+                    console.log(response);
+                   p.html(response);
+                },
+           });
+        }
+
+    );
+
+</script>

@@ -1,0 +1,243 @@
+<html>
+    <head>
+     <meta charset="utf-8">
+    <title>Icanteen Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1 shrink-to-fit=yes">
+    <meta name="description" content="The number one Online Canteen Management Project">
+    <meta name="Context" content="Object Oriented Software Engineering Course">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <style>
+    h1,p{
+      text-align:center;
+    }
+    .formcontainer {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin: 20px 20px;
+}
+
+
+input[type=submit]{
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+input[type=text]{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+   padding: 8px 18px;
+   margin: 4px 4px;
+   width: 50%;
+}
+</style>
+
+<script>
+// call onload or in script segment below form
+function attachCheckboxHandlers() {
+    // get reference to element containing checkboxes
+    var el = document.getElementById('pay');
+
+    // get reference to input elements in  container element
+    var checkBoxes = el.getElementsByTagName('input');
+
+    // assign GetSelected function to onclick property of each checkbox
+    for (var i=0, len=checkBoxes.length; i<len; i++) {
+        if ( checkBoxes[i].type === 'checkbox' ) {
+            checkBoxes[i].onclick = GetSelected;
+        }
+    }
+}
+
+function GetSelected() {
+        //Reference the form
+        var Form = this.form;
+        var checkBoxes = Form.getElementsByTagName('input');
+
+        var total = 0;
+        var val = parseFloat(Form.elements["total"].value)
+
+        //Loop through the CheckBoxes.
+
+                var row = $(this).closest("tr")[0];
+                total = row.cells[2].innerHTML;
+
+
+                // if check box is checked, add its value to val, otherwise subtract it
+                  if (checkBoxes.checked === true ) {
+                        val = val + parseFloat(total)
+                   } else if(checkBoxes.checked === false )  {
+                       val = val - parseFloat(total);
+                    }
+                // and use it to update value of total text box
+                Form.elements['total'].value = val;
+}
+
+// format val to n number of decimal places
+function formatDecimal(val, n) {
+    n = n || 2;
+    var str = "" + Math.round ( parseFloat(val) * Math.pow(10, n) );
+    while (str.length <= n) {
+        str = "0" + str;
+    }
+    var pt = str.length - n;
+    return str.slice(1,pt) + "." + str.slice(pt);
+};
+
+function validateForm() {
+  var x = document.forms["form"]["q"].value;
+  if (x == "") {
+    alert("Please a name");
+    return false;
+  }
+};
+function validateForm2() {
+  var x = document.forms["payform"]["first_name"].value;
+  if (x == "") {
+    alert("All fields are required");
+    return false;
+  }
+  var name = document.forms["payform"]["last_name"].value;
+  if (name == "") {
+    alert("All fields are required");
+    return false;
+  }
+  var tel = document.forms["payform"]["tel"].value;
+  if (tel == "") {
+    alert("All fields are required");
+    return false;
+  }
+  var email = document.forms["payform"]["email"].value;
+  if (email == "") {
+    alert("All fields are required");
+    return false;
+  }
+  var total = document.forms["payform"]["total"].value;
+  if (total == "") {
+    alert("All fields are required");
+    return false;
+  }
+  var date = document.forms["payform"]["datepicker"].value;
+  var today = new Date();
+  var currentDate = today.getDate() ;
+  if (date == "" || date < currentDate)  {
+    alert("Enter a date ahead of today");
+    return false;
+  }
+};
+</script>
+    </head>
+
+    {% block content %}
+{% include 'payments/navbar.html' %}
+<div class="container">
+    <div class="row" style="margin-top: 2%">
+         <a href="{% url 'paymentstatus' %}"><button class="btn btn-primary" style=" background-color: #474E5D;">
+          Check Status
+         </button></a>
+    </div>
+</div>
+          <h1>Send Validation Request Here!</h1>
+          <p>You can send validation requests and also check if your order as been processed</p>
+
+<body><div class="formcontainer">
+    <p>Please fill this form to search for your order</p>
+
+<form action="{% url 'makepayment' %}" method="GET" value="{{request.GET.q}}" name="form" onsubmit="return validateForm()">
+    {% csrf_token %}
+<p><input type="text" name="q" value="{{request.GET.q}}" placeholder="Enter Name"  style="border: 1px solid #ccc;border-radius: 4px;padding: 16px 32px;margin: 4px 2px;width: 50%;"></p>
+<p><input type="submit" name="submit" value="Search" class="btn btn-primary" style=" background-color: #474E5D;" ></p>
+</form>
+</div>
+
+
+<div class="container" style="margin-top:5%" id="pay">
+
+{% if submitbutton == 'Search' and request.GET.q != '' %}
+{% if results %}
+<h3 style="margin-left: 5%">Results for <b>{{ request.GET.q }}</b> = {{results.count}}</h3>
+
+<h1>Select Orders To Pay For</h1>
+<form action="." method="POST" value="{{request.POST.q}}" id="paymentForm" name="payform" onsubmit="return validateForm2()">
+    {% csrf_token %}
+
+<table align="center" class="table table-striped" id="pay">
+    <thead>
+      <tr>
+        <th><input  type="checkbox" id="select"></th>
+        <th>Order ID</th>
+        <th>{{form.cost.label_tag}}</th>
+        <th>{{form.order_date.label_tag}}</th>
+      </tr>
+    </thead>
+{% for result in results %}
+    <tr>
+        <td id="select"  class="chckb" ><input  type="checkbox" onchange="GetSelected()"></td>
+        <td id="items">{{result.id}}</td>
+        <td id="cost">{{result.get_total_cost }}</td>
+        <td id="OrderDate">{{result.created}}</td>
+
+   </tr>
+   {% endfor %}
+  </table>
+
+ <div align="center" class="formcontainer">
+     <table style="width:100%" align="center">
+         <thead>
+             <h2>Personal Information</h2>
+         </thead>
+    <tr>
+  <td align="right">{{form.first_name.label_tag}}</td>
+  <td align="left"><input type="text" name="first_name" id="fname"  ></td>
+  </tr>
+ <tr>
+     <td align="right">{{form.last_name.label_tag}}</td>
+     <td align="left"><input type="text" name="last_name" id="lname" ></td>
+     </tr>
+  <tr>
+      <td align="right">{{form.email.label_tag}} </td>
+      <td align="left"><input type="email" name="email" style="border-radius:4px;padding: 8px 18px;margin: 4px 2px;width: 50%" ></td>
+    </tr>
+  <tr>
+      <td align="right">{{form.total_price.label_tag }}</td>
+      <td align="left"><input type="text" value="0" name="total"></td>
+   </tr>
+  <tr>
+      <td align="right">{{form.tel.label_tag }}</td>
+      <td align="left"><input type="text" name="tel" placeholder="Number used for MoMo/OrngeMoney Payment" id="tel" ></td>
+    </tr>
+  <tr>
+      <td align="right">{{form.delivery_date.label_tag }}</td>
+      <td align="left"><input type="date" name="datepicker" style="border-radius:4px;padding: 8px 18px;margin: 4px 2px;width: 50%" ></td>
+    </tr>
+
+  </table>
+  </div>
+
+<p style="margin-top:2%"><input type="submit" name="save" value="Send" class="btn btn-primary" style=" background-color: #474E5D;" id="save"></p>
+{% else %}
+Sorry!!!!No results for <b>{{ request.GET.q }}</b>. Try another name(A first or last name)
+{% endif %}
+{% endif %}
+</form>
+<script>attachCheckboxHandlers();</script>
+{% endblock content %}
+</div>
+</body>
+{% include 'gallery/footer.html' %}
+</html>
+
+

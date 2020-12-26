@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid bg-2 text-center">
+    <h3>{{ object.name }}</h3>
+    <p><a class="btn btn-default" href="{% url 'gallery_category_list' %}">Category Listing</a></p>
+        <table class="table">
+            <tr><td>name</td><td>{{ object.name }}</td></tr>
+            <tr><td>slug</td><td>{{ object.slug }}</td></tr>
+            <tr><td>created</td><td>{{ object.created }}</td></tr>
+            <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+            <tr><td>path_to_picture</td><td>{{ object.path_to_picture }}</td></tr>
+            <tr><td>views</td><td>{{ object.views }}</td></tr>
+            <tr><td><img src="{{object.image_url}}"/></td></tr>
+        </table>
+    <a class="btn btn-primary" href="{{object.get_update_url}}">Edit Category</a>
+</div>
+{% endblock %}

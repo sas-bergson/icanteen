@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    @media (min-width: 992px) {
+        body {
+        padding-top: 56px;
+        }
+    }
+
+    .price{
+        color: black;
+    }
+     .name{
+        color: black;
+    }
+
+
+
+</style>
+
+  <!---------------------------------- dropdown-------------------------------------->
+ <div class="container">
+  <div class="row">
+      <!---------------------------------- category----------------------------------->
+    <div class="col-sm-6">
+      <div class="category">
+    <div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Category
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><a class="glyphicon glyphicon-glass" href="#"> Drinks</a></li>
+    <li><a class="glyphicon glyphicon-ice-lolly-tasted"> Candies</a></li>
+    <li><a class="glyphicon glyphicon-cutlery" href="#"> Meals</a></li>
+    <li><a class="glyphicon glyphicon-leaf" href="#"> Pastries</a></li>
+    <li><a class="glyphicon glyphicon-apple" href="#"> Snacks</a></li>
+  </ul>
+</div>
+</div>
+ </div>
+ <!---------------------------------- view ----------------------------------->
+  <div class="col-sm-6">
+         <div class="view">
+           <div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">View Type
+  <span class="caret"></span></button>
+  <ul id= "dp"  class="dropdown-menu">
+    <li><a class="glyphicon glyphicon-stop" href="/gallery/ExtraLargeView/"> ExtraLarge </a></li>
+    <li><a class="glyphicon glyphicon-unchecked" href="/gallery/LargeView/"> Large </a></li>
+    <li><a class="glyphicon glyphicon-th-large" href="/gallery/MediumView/"> Medium  </a></li>
+    <li><a class="glyphicon glyphicon-th" href="/gallery/SmallView/"> Small</a></li>
+    <li><a class="glyphicon glyphicon-th-list" href="/gallery/LargeView/"> List</a></li>
+    <li><a class="glyphicon glyphicon-align-justify" href="#"> Details</a></li>
+    <li><a class=" glyphicon glyphicon-list-alt" href="#"> Tiles</a></li>
+    <li><a class=" glyphicon glyphicon-list-alt" href="#"> Content</a></li>
+  </ul>
+</div>
+</div>
+  </div>
+ </div>
+</div>
+
+
+<!---------------------------------- Wall ----------------------------------->
+<div id= "md" class="container">
+    <h1 class="my-4 text-center text-lg-left">Products</h1>
+    <div class="row text-center text-lg-left">
+        {% for object in object_list %}
+        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-top: 30px;">
+            <a href="{{object.get_absolute_url}}" class="d-block mb-4 h-100">
+                <img class="img-thumbnail"
+                    src = "{% static 'gallery/img/loading.gif' %}"
+                    alt="{{ object.name }}"
+                    data-url = "{{object.image_url}}"/>
+            </a>
+            <div>
+                <h5 class = "name">{{ object.designation }}</h5>
+                <h5 class = "price">Price: {{ object.price}}
+                <a class="glyphicon glyphicon-shopping-cart" href="#"></a></h5>
+                 <form action="{% url "cart:cart_add" object.id %}" method="post">
+                                {% csrf_token %}
+                                {{ cart_product_form }}
+                                <input type="submit" value="add to cart" class="btn btn-primary">
+                            </form>
+                <p></p>
+              </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!------------------------------------------------------------------------------->
+<div id= "lg" class="container">
+    <h1 class="my-4 text-center text-lg-left">Products</h1>
+    <div class="row text-center text-lg-left">
+        {% for object in object_list %}
+        <div class="col-lg-4 col-md-4" style="margin-top: 30px;">
+            <a href="{{object.get_absolute_url}}" class="d-block mb-4 h-100">
+                <img class="img-thumbnail"
+                    src = "{{object.image_url}}"
+                    alt="{{ object.name }}"/>
+            </a>
+            <div>
+                <h5 class = "name">{{ object.designation }}</h5>
+                <h5 class = "price">Price: {{ object.price}}
+                <a class="glyphicon glyphicon-shopping-cart" href="#"></a></h5>
+                <p></p>
+              </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------->
+<script>
+    $(".img-thumbnail").each(
+        function(){
+            img_number = $(".img-thumbnail").index(this);
+            console.log("loading image number "+ img_number);
+            var p = $(this).parent();
+            console.log($(this).attr('data-url').split('/',4)[3]);
+            $.ajax({
+                type: "GET",
+                url: $(this).attr('data-url').split('/',4)[3],
+                contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+                dataType: "html",
+                success: function(response) {
+                    console.log(response)
+                    p.html(response);
+                },
+                error: function (xhr, status) {
+                  p.html("Error: " + xhr.status + ": " + xhr.statusText);
+                }
+            });
+        }
+    );
+
+
+    $("#dp").on('change', function() {
+  var value = $(this).val();
+  if (value) {
+    $(".page").hide();
+    $("#Page" + value).show();
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+<style>
+ .name{
+     color: #474E5D;
+     float:left;
+     text-align: left;
+ }
+ h1.name{
+
+     text-align: left;
+     color: #474E5D;
+ }
+ h3.name{
+     text-align: left;
+     color: #474E5D;
+ }
+ .namee{
+     float:left;
+     text-align: left;
+     color: #474E5D;
+ }
+
+  .btn-default{
+      background-color : #474E5D;
+  }
+
+   .display{
+       display : inline;
+   }
+
+</style>
+{% block content %}
+<div class="container-fluid bg-2 text-center" style ="background-color : #F3F3F3;">
+  <div class = "col-sm-6">
+      <div  class = "img">
+          <p><img src="{{object.image_url}}" style="width:450px;height:350px; "></p>
+      </div>
+    <h3 class = "name" style = "color:#474E5D">{{ object.designation }}</h3>
+      <p><form class = "display" action="{% url "cart:cart_add" object.id %}" method="post">
+                                {% csrf_token %}
+                                {{ cart_product_form }}
+                                <input type="submit" value="add to cart" class="btn btn-primary" style = "background-color:#474E5D; margin-bottom:5px;">
+                            </form></p>
+    <p class = "display"><a class="btn btn-primary" href="{% url 'product_list' %}" style = "margin-bottom:20px; background-color:#474E5D;">View products List</a></p>
+   </div>
+
+<div class = "col-sm-6">
+    <h2 style = "margin-bottom:20px; color:#474E5D;">Product Details</a></h2><br>
+   <div class "namee">
+        <h3 class = "name" style = "color:#474E5D">{{ object.designation }}</h3><br>
+        <h4 class = "name" style = "color:#474E5D">Description: {{ object.description}}</h4>
+        <h4 class = "name" style = "color:#474E5D">Packaging: {{ object.packaging }}</h4>
+        <h4 class = "name" style = "color:#474E5D">Price: {{ object.price }} CFA</h4><br>
+
+    </div>
+
+
+
+
+</div>
+</div>
+
+{% endblock %}

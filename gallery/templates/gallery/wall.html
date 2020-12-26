@@ -1,0 +1,47 @@
+{% load static %}
+<style>
+	@media (min-width: 992px) {
+		body {padding-top: 56px;}
+	}
+</style>
+
+<!---------------------------------- Wall ----------------------------------->
+<div class="container">
+	<h1 class="my-4 text-center text-lg-left">Categories</h1>
+		<div class="row text-center text-lg-left">
+	{% for object in object_list %}
+		<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+			<a href="{{object.get_absolute_url}}" class="d-block mb-4 h-100">
+			<img class="img-thumbnail"
+				src = "{% static 'gallery/img/loading.gif' %}"
+				alt="{{ object.name }}"
+				data-url = "{{object.image_url}}"/>
+			</a>
+			<p>{{object.name}}</p>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+
+<script>
+	$(".img-thumbnail").each(
+	function(){
+		img_number = $(".img-thumbnail").index(this);
+		console.log("loading image number "+ img_number);
+		var p = $(this).parent();
+		console.log($(this).attr('data-url').slice(6));
+		$.ajax({
+			type: "GET",
+			url: 'gallery'+$(this).attr('data-url').slice(6),
+			contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+			dataType: "html",
+			success: function(response) {
+				console.log(response)
+				p.html(response);
+			},
+			error: function (xhr, status) {
+				p.html("Error: " + xhr.status + ": " + xhr.statusText);
+			}
+		});
+	});
+</script>
