@@ -142,6 +142,7 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 CART_SESSION_ID = 'cart'
 # this is the key going to be used to the cart during user sessions

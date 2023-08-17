@@ -1,13 +1,8 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from .forms import CustomerForm
 from .models import Customer
-from django.shortcuts import render_to_response
-from django.conf import settings
-from django.template import loader
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render
 from django.db.models import Q
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def Customer_details(request):
     if request.method == 'POST':
