@@ -25,14 +25,14 @@
        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style = "background-color:#474E5D">View Type
         <span class="caret"></span></button>
               <ul class="dropdown-menu">
-                <li><a class="glyphicon glyphicon-stop" href={% url 'extralargeview' %}> ExtraLarge </a></li>
-                <li><a class="glyphicon glyphicon-unchecked" href={% url 'largeview' %}> Large </a></li>
-                <li><a class="glyphicon glyphicon-th-large" href={% url 'mediumview' %}> Medium  </a></li>
-                <li><a class="glyphicon glyphicon-th" href={% url 'smallview' %}> Small</a></li>
-                <li><a class="glyphicon glyphicon-th-list" href={% url 'listview' %}> List</a></li>
-                <li><a class="glyphicon glyphicon-align-justify" href={% url 'detailview' %}> Details</a></li>
-                <li><a class=" glyphicon glyphicon-list-alt" href={% url 'smallview' %}> Tiles</a></li>
-                <li><a class=" glyphicon glyphicon-list-alt" href={% url 'smallview' %}> Content</a></li>
+                <li><a class="glyphicon glyphicon-stop" href={% url 'gallery:extra_large_view' %}> ExtraLarge </a></li>
+                <li><a class="glyphicon glyphicon-unchecked" href={% url 'gallery:large_view' %}> Large </a></li>
+                <li><a class="glyphicon glyphicon-th-large" href={% url 'gallery:medium_view' %}> Medium  </a></li>
+                <li><a class="glyphicon glyphicon-th" href={% url 'gallery:small_view' %}> Small</a></li>
+                <li><a class="glyphicon glyphicon-th-list" href={% url 'gallery:list_view' %}> List</a></li>
+                <li><a class="glyphicon glyphicon-align-justify" href={% url 'gallery:detail_view' %}> Details</a></li>
+                <li><a class=" glyphicon glyphicon-list-alt" href={% url 'gallery:small_view' %}> Tiles</a></li>
+                <li><a class=" glyphicon glyphicon-list-alt" href={% url 'gallery:small_view' %}> Content</a></li>
               </ul>
     </div>
 </div>

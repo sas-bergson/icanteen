@@ -41,10 +41,10 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('gallery_category_detail', args=(self.slug,))
+        return reverse('gallery:category_detail', args=(self.slug,))
 
     def get_update_url(self):
-        return reverse('gallery_category_update', args=(self.slug,))
+        return reverse('gallery:category_update', args=(self.slug,))
 
     def __unicode__(self):
         return u'%s' % self.slug
@@ -87,10 +87,10 @@ class Product(models.Model):
         super(Product, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('gallery_product_detail', args=(self.slug,))
+        return reverse('gallery:product_detail', args=(self.slug,))
 
     def get_update_url(self):
-        return reverse('gallery_product_update', args=(self.slug,))
+        return reverse('gallery:product_update', args=(self.slug,))
 
     def __unicode__(self):
         return u'%s' % self.slug
@@ -124,10 +124,10 @@ class OrderItem(models.Model):
             #return self.order
 
     def get_absolute_url(self):
-        return reverse('gallery_order_item_detail', args=(self.slug,))
+        return reverse('gallery:order_item_detail', args=(self.slug,))
 
     def get_update_url(self):
-        return reverse('gallery_order_item_update', args=(self.slug,))
+        return reverse('gallery:order_item_update', args=(self.slug,))
 
     def __unicode__(self):
         return u'%s' % self.slug

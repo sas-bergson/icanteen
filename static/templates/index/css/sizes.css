@@ -1,0 +1,6 @@
+body{
+	height:100vh;
+}
+body > .container-fluid{
+	height: 60vh;
+}

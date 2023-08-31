@@ -17,6 +17,8 @@ Including another URLconf
 from django.urls import re_path as url
 from . import views
 
+app_name = 'polls'
+
 urlpatterns = [
         #polls/
         url(r'^$',views.index, name='index'),
@@ -26,5 +28,4 @@ urlpatterns = [
         url(r'^(?P<question_id>[0-9]+)/results/$',views.results, name='results'),
         #polls/<question_id/votes>
         url(r'^(?P<question_id>[0-9]+)/vote/$',views.vote, name='vote'),
-
 ]

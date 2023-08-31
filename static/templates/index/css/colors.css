@@ -1,0 +1,30 @@
+body {
+	color: #f5f6f7;
+}
+.bg-1{
+	background-color:#EFF6F9; /*light cyan*/
+	color:#3A92CD;
+}
+.bg-2{
+	background-color:#474E5D; /*dark Blue*/
+	color:#fff;
+}
+.bg-3{
+	background-color:#fff; /*dark Blue*/
+	color:#555;
+}
+.bg-4 {
+	background-color: #222;
+	color: #fff;
+}
+
+.navbar-nav li a:visited{
+	color: #ddbc18 !important;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+
+footer>p>a>i {
+    color: #ddbc18 !important;
+}

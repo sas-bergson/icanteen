@@ -145,7 +145,7 @@ function validateForm2() {
 {% include 'payments/navbar.html' %}
 <div class="container">
     <div class="row" style="margin-top: 2%">
-         <a href="{% url 'paymentstatus' %}"><button class="btn btn-primary" style=" background-color: #474E5D;">
+         <a href="{% url 'payments:status' %}"><button class="btn btn-primary" style=" background-color: #474E5D;">
           Check Status
          </button></a>
     </div>
@@ -156,7 +156,7 @@ function validateForm2() {
 <body><div class="formcontainer">
     <p>Please fill this form to search for your order</p>
 
-<form action="{% url 'makepayment' %}" method="GET" value="{{request.GET.q}}" name="form" onsubmit="return validateForm()">
+<form action="{% url 'payments:makepayment' %}" method="GET" value="{{request.GET.q}}" name="form" onsubmit="return validateForm()">
     {% csrf_token %}
 <p><input type="text" name="q" value="{{request.GET.q}}" placeholder="Enter Name"  style="border: 1px solid #ccc;border-radius: 4px;padding: 16px 32px;margin: 4px 2px;width: 50%;"></p>
 <p><input type="submit" name="submit" value="Search" class="btn btn-primary" style=" background-color: #474E5D;" ></p>

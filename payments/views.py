@@ -57,7 +57,7 @@ def paymentStatus(request):
     payment_list = Payment.objects.all()
     return render (request,'payments/paymentStatus.html', {'payment':payment_list})
 
-def sucess(request):
+def success(request):
     return render (request,'payments/sucess.html')
 
 # Create your views here.

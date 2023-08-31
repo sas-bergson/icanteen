@@ -8,7 +8,7 @@
  </style>
  <div class="search">
  <div class="col-sm-6" >
-  <form class="navbar-form navbar-left" name="myForm" method='GET' action="{% url 'search' %}" onsubmit="return validateForm()">
+  <form class="navbar-form navbar-left" name="myForm" method='GET' action="{% url 'gallery:search' %}" onsubmit="return validateForm()">
       <div class="form-group">
           <div class = "sch">
         <input type="text" class="form-control" placeholder="Search Product . . ." name="q" value="{{request.GET.q}}">

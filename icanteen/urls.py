@@ -21,15 +21,16 @@ from django.contrib import admin
 
 
 urlpatterns = [
-    url(r'^\Z',      include('home.urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^polls/', include('polls.urls')),
+    url(r'^\Z',         include('home.urls')),
+    url(r'^admin/',     admin.site.urls),
+    url(r'^polls/',     include('polls.urls')),
     url(r'^slideshow/', include('slideshow.urls')),
-    url(r'^cart/', include('cart.urls')),
-    url(r'^orders/', include('orders.urls')),
-    url(r'^gallery/', include('gallery.urls')),
-    url(r'^payment/', include('payments.urls')),
-     url(r'^maps/', include('maps.urls')),
+    url(r'^cart/',      include('cart.urls')),
+    url(r'^orders/',    include('orders.urls')),
+    url(r'^gallery/',   include('gallery.urls')),
+    url(r'^payment/',   include('payments.urls')),
+    url(r'^maps/',      include('maps.urls')),
+    url(r'^accounts/',   include('accounts.urls')),
   ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -1,0 +1,12 @@
+body {
+	font: 20px "Montserrat", sans-serif;
+	line-height: 1.8;
+}
+p {font-size: 16px;}
+.navbar {
+	font-size: 12px;
+	letter-spacing: 5px;
+}
+.navbar-inverse .navbar-nav>li>a {
+	font-weight: bold;
+}

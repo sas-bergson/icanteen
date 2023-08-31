@@ -64,7 +64,7 @@
               <div class="form-group">
                <ul class="list-group">
                 <Li class ="list-group-item active" style = "background-color:#474E5D" >Categories</li>
-                <Li class ="list-group-item" class="selected" ><a href="{% url 'product_list' %}" style = "color:#474E5D">All</a></li>
+                <Li class ="list-group-item" class="selected" ><a href="{% url 'gallery:product_list' %}" style = "color:#474E5D">All</a></li>
                     {% for c in categories %}
                 <li {% if category.slug == c.slug %}class="selected" {% endif %} class="list-group-item">
                    <a href="{{ c.get_absolute_url }}" style = "color:#474E5D"  >{{ c.name }}</a></li>
@@ -97,7 +97,7 @@
                 <h5 class = "price"><b>Price:</b> {{ object.price}}CFA</h5>
                 <h6 class = "price"><b>Description:</b>  {{ object.description|truncatewords:2}}</h6>
                  <div>
-                   <form action="{% url "cart:cart_add" object.id %}" method="post">
+                   <form action="{% url "cart:add" object.id %}" method="post">
                                 {% csrf_token %}
                                 {{ cart_product_form }}
                                 <input type="submit" value="add to cart" class="btn btn-primary" style = "background-color:#474E5D">
