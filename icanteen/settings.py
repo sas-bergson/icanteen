@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '*']
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
+    'users',
     'maps',
     'polls',
     'payments',
@@ -134,7 +134,7 @@ STATIC_URL = '/static/'
 
 # default static files settings for PythonAnywhere.
 # see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-
+LOGIN_REDIRECT_URL = "users:dashboard"
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
@@ -151,12 +151,68 @@ CART_SESSION_ID = 'cart'
 
 #For email
 
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'tamunang.courage@ictuniversity.org'
+# EMAIL_HOST_PASSWORD = 'utykydfqeenxvxgg'
+# EMAIL_PORT = 587
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'tamunang.courage@ictuniversity.org'
-EMAIL_HOST_PASSWORD = 'utykydfqeenxvxgg'
 EMAIL_PORT = 587
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'sas.bergson@gmail.com'
+DEFAULT_FROM_EMAIL = 'sas.bergson@gmail.com'
+EMAIL_HOST_PASSWORD = 'yfmhdehvhuseicca'
 
 #This did the trick
+
+LOGGING = {
+    'version': 1,
+     # The version number of our log
+    'disable_existing_loggers': False,
+    # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
+    # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'warning.log',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'debug.log',
+            'formatter': 'verbose',
+        },
+        'email': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'myapp': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 

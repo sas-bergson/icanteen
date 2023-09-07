@@ -1,0 +1,16 @@
+{% load static %}
+<h3>Opening very soon !!!!</h3>
+<img class="img-responsive img-circle" 
+	style="display:inline" 
+	src="{% static "home/img/djangoDevelopersRocket.gif" %}" 
+	alt="Django Developers" height="140" width="210"
+	/>
+<h3>Hello, {{ user.username|default:'Guest' }}!</h3>
+<div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'users:logout' %}">Logout</a>
+		<a href="{% url 'users:password_change' %}">Change password</a>
+    {% else %}
+        <a href="{% url 'users:login' %}">Login</a>
+    {% endif %}
+</div>

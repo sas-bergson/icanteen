@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^gallery/',   include('gallery.urls')),
     url(r'^payment/',   include('payments.urls')),
     url(r'^maps/',      include('maps.urls')),
-    url(r'^accounts/',   include('accounts.urls')),
+    url(r'^users/',   include('users.urls')),
   ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
