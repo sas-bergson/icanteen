@@ -168,6 +168,23 @@ EMAIL_HOST_PASSWORD = 'yfmhdehvhuseicca'
 
 #This did the trick
 
+# A logger is the entry point into the logging system. Each logger is a named bucket to 
+# which messages can be written for processing.
+# A logger is configured to have a log level. This log level describes the severity of 
+# the messages that the logger will handle. Python defines the following log levels:
+
+# DEBUG: Low level system information for debugging purposes
+# INFO: General system information
+# WARNING: Information describing a minor problem that has occurred.
+# ERROR: Information describing a major problem that has occurred.
+# CRITICAL: Information describing a critical problem that has occurred.
+
+# Each message that is written to the logger is a Log Record. 
+# Each log record also has a log level indicating the severity of that specific message. 
+# A log record can also contain useful metadata that describes the event that is being logged. 
+# This can include details such as a stack trace or an error code.
+
+
 LOGGING = {
     'version': 1,
      # The version number of our log
@@ -186,31 +203,49 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'warning.log',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'debug.log',
-            'formatter': 'verbose',
-        },
         'email': {
             'level': 'DEBUG',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
         },
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
+        'file_info': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'info.log'),
+            'formatter': 'verbose',
+        },
+        'file_warning': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'warning.log'),
+            'formatter': 'verbose',
+        },
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'error.log'),
+            'formatter': 'verbose',
+        },
+        'file_critical': {
+            'level': 'CRITICAL',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'critical.log'),
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console','file_info','file_debug','file_warning','file_error','file_critical'],
             'level': 'INFO',
         },
-        'myapp': {
-            'handlers': ['console'],
+        'users': {
+            'handlers': ['console','email','file_info','file_debug','file_warning','file_error','file_critical'],
             'level': 'DEBUG',
         },
     },
