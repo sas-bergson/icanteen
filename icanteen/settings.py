@@ -192,61 +192,54 @@ LOGGING = {
     # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
     # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
     'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
         },
     },
+    # "filters": {
+    #     "require_debug_true": {
+    #         "()": "django.utils.log.RequireDebugTrue",
+    #     },
+    # },
     'handlers': {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+            'formatter': 'simple',
         },
         'email': {
             'level': 'DEBUG',
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
         },
-        'file_debug': {
+        'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'debug.log'),
             'formatter': 'verbose',
         },
-        'file_info': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'info.log'),
-            'formatter': 'verbose',
-        },
-        'file_warning': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'warning.log'),
-            'formatter': 'verbose',
-        },
-        'file_error': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'error.log'),
-            'formatter': 'verbose',
-        },
-        'file_critical': {
-            'level': 'CRITICAL',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'critical.log'),
-            'formatter': 'verbose',
-        },
     },
+    # Define the root logger's settings
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+    # Define the django log module's settings
     'loggers': {
         'django': {
-            'handlers': ['console','file_info','file_debug','file_warning','file_error','file_critical'],
-            'level': 'INFO',
+            'handlers': ['console','file'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            "propagate": True,
         },
         'users': {
-            'handlers': ['console','email','file_info','file_debug','file_warning','file_error','file_critical'],
-            'level': 'DEBUG',
+            'handlers': ['console','email','file'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            "propagate": True,
         },
     },
 }
