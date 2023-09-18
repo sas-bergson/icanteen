@@ -55,7 +55,7 @@ class PasswordResetView(auth_views.PasswordResetView):
     """ Display the Password Reset Form."""
     form_class = PasswordResetForm
     template_name = "auth/password_reset_form.html"
-    success_url = reverse_lazy('users:password_reset_done')
+    success_url = reverse_lazy('users:password_reset_link_sent')
     email_template_name = "auth/password_reset_email.html"
     html_email_template_name = "auth/password_reset_email.html"
     subject_template_name = "auth/password_reset_subject.txt"
@@ -115,9 +115,15 @@ class SignupContextMixin:
         return context
 
 class SignUpView(CreateView):
+    email_template_name = "registration/account_activation_email.html"
+    extra_email_context = None
     form_class = SignUpForm
-    success_url = reverse_lazy("users:login")
+    from_email = None
+    html_email_template_name = "registration/account_activation_email.html"
+    subject_template_name="registration/account_activation_subject.txt"
+    success_url = reverse_lazy("users:account_signup_activation_sent")
     template_name = "registration/signup_form.html"
+    title = _("Sign Up")
     token_generator = default_token_generator
 
     @method_decorator(csrf_protect)
@@ -136,18 +142,15 @@ class SignUpView(CreateView):
             "extra_email_context": self.extra_email_context,
         }
         form.save(**opts)
-        return super().form_valid(form)
+        return HttpResponseRedirect(self.success_url)
     
 class SignUpDoneView(SignupContextMixin, TemplateView):
-    template_name = "registration/signup_done.html"
+    template_name = "registration/signup_activation_sent.html"
     title = _("Signup Activation link sent")
 
 INTERNAL_RESET_SESSION_TOKEN = "account_activation_token"
 
-class SignUpActivationView(SignupContextMixin):
-    # form_class = SetPasswordForm
-    # post_reset_login = False
-    # post_reset_login_backend = None
+class SignUpActivationView(SignupContextMixin, TemplateView):
     account_activation_url_token = "account-activation"
     success_url = reverse_lazy("users:signup_complete")
     template_name = "registration/signup_account_activation.html"

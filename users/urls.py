@@ -19,9 +19,11 @@ urlpatterns = [
     url("logout/", views.LogoutView.as_view(), name="logout"),
     url("password_change/done/",views.PasswordChangeDoneView.as_view(),name="password_change_done"),
     url("password_change/", views.PasswordChangeView.as_view(), name="password_change"),
-    url("password_reset/done/",views.PasswordResetDoneView.as_view(),name="password_reset_done"),
+    url("password_reset/done/",views.PasswordResetDoneView.as_view(),name="password_reset_link_sent"),
     url("password_reset/", views.PasswordResetView.as_view(), name="password_reset"),
     url("reset/(?P<uidb64>[\w-]+)/(?P<token>[\w-]+)/",views.PasswordResetConfirmView.as_view(),name="password_reset_confirm"),
     url("reset/done/",views.PasswordResetCompleteView.as_view(),name="password_reset_complete"),
-    url("signup/", views.SignUpView.as_view(), name="signup"),
+    url("signup/done/", views.SignUpDoneView.as_view(), name="account_signup_activation_sent"),
+    url("signup/", views.SignUpView.as_view(), name="account_signup"),
+    url("signup_activation/(?P<uidb64>[\w-]+)/(?P<token>[\w-]+)/", views.SignUpActivationView.as_view(), name="account_activation_confirm"),
 ]
