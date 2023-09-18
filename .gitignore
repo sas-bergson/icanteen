@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Script shell
+*.sh
+
 # C extensions
 *.so
 
