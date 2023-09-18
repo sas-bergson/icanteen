@@ -1,0 +1,239 @@
+/* 
+	There are four different combinators in CSS:
+
+	 - descendant selector (space)
+	 - child selector (>)
+	 - adjacent sibling selector (+)
+	 - general sibling selector (~) 
+	
+*/
+
+.px-6 {
+    padding: 0 6vmin!important;
+}
+.px-7 {
+    padding: 0 7vmin!important;
+}
+.px-8 {
+    padding: 0 8vmin!important;
+}
+.px-9 {
+    padding: 0 9vmin!important;
+}
+.px-10 {
+    padding: 0 10vmin!important;
+}
+.px-11 {
+    padding: 0 11vmin!important;
+}
+.px-12 {
+    padding: 0 12vmin!important;
+}
+.px-13 {
+    padding: 0 13vmin!important;
+}
+.px-14 {
+    padding: 0 14vmin!important;
+}
+.px-15 {
+    padding: 0 15vmin!important;
+}
+.px-16 {
+    padding: 0 16vmin!important;
+}
+.px-17 {
+    padding: 0 17vmin!important;
+}
+.px-18 {
+    padding: 0 18vmin!important;
+}
+.px-19 {
+    padding: 0 19vmin!important;
+}
+.px-20 {
+    padding: 0 20vmin!important;
+}
+.px-21 {
+    padding: 0 21vmin!important;
+}
+.px-22 {
+    padding: 0 22vmin!important;
+}
+.px-23 {
+    padding: 0 23vmin!important;
+}
+.px-24 {
+    padding: 0 24vmin!important;
+}
+.px-25 {
+    padding: 0 25vmin!important;
+}
+.px-26 {
+    padding: 0 26vmin!important;
+}
+.px-27 {
+    padding: 0 27vmin!important;
+}
+.px-28 {
+    padding: 0 28vmin!important;
+}
+.px-29 {
+    padding: 0 29vmin!important;
+}
+.px-30 {
+    padding: 0 30vmin!important;
+}
+.px-31 {
+    padding: 0 31vmin!important;
+}
+.px-32 {
+    padding: 0 32vmin!important;
+}
+.px-33 {
+    padding: 0 33vmin!important;
+}
+.px-34 {
+    padding: 0 34vmin!important;
+}
+.px-35 {
+    padding: 0 35vmin!important;
+}
+.px-36 {
+    padding: 0 36vmin!important;
+}
+.px-37 {
+    padding: 0 37vmin!important;
+}
+.px-38 {
+    padding: 0 38vmin!important;
+}
+.px-39 {
+    padding: 0 39vmin!important;
+}
+.px-40 {
+    padding: 0 40vmin!important;
+}
+.px-50 {
+    padding: 0 50vmin!important;
+}
+
+.py-6 {
+    padding: 6vmin 0!important;
+}
+.py-7 {
+    padding: 7vmin 0!important;
+}
+.py-8 {
+    padding: 8vmin 0!important;
+}
+.py-9 {
+    padding: 9vmin 0!important;
+}
+.py-10 {
+    padding: 10vmin 0!important;
+}
+.py-11 {
+    padding: 11vmin 0!important;
+}
+.py-12 {
+    padding: 12vmin 0!important;
+}
+.py-13 {
+    padding: 13vmin 0!important;
+}
+.py-14 {
+    padding: 14vmin 0!important;
+}
+.py-15 {
+    padding: 15vmin 0!important;
+}
+.py-16 {
+    padding: 16vmin 0!important;
+}
+.py-17 {
+    padding: 17vmin 0!important;
+}
+.py-18 {
+    padding: 18vmin 0!important;
+}
+.py-19 {
+    padding: 19vmin 0!important;
+}
+.py-20 {
+    padding: 20vmin 0!important;
+}
+.py-21 {
+    padding: 21vmin 0!important;
+}
+.py-22 {
+    padding: 22vmin 0!important;
+}
+.py-23 {
+    padding: 23vmin 0!important;
+}
+.py-24 {
+    padding: 24vmin 0!important;
+}
+.py-25 {
+    padding: 25vmin 0!important;
+}
+.py-26 {
+    padding: 26vmin 0!important;
+}
+.py-27 {
+    padding: 27vmin 0!important;
+}
+.py-28 {
+    padding: 28vmin 0!important;
+}
+.py-29 {
+    padding: 29vmin 0!important;
+}
+.py-30 {
+    padding: 30vmin 0!important;
+}
+.py-31 {
+    padding: 31vmin 0!important;
+}
+.py-32 {
+    padding: 32vmin 0!important;
+}
+.py-33 {
+    padding: 33vmin 0!important;
+}
+.py-34 {
+    padding: 34vmin 0!important;
+}
+.py-35 {
+    padding: 35vmin 0!important;
+}
+.py-36 {
+    padding: 36vmin 0!important;
+}
+.py-37 {
+    padding: 37vmin 0!important;
+}
+.py-38 {
+    padding: 38vmin 0!important;
+}
+.py-39 {
+    padding: 39vmin 0!important;
+}
+.py-40 {
+    padding: 40vmin 0!important;
+}
+.py-50 {
+    padding: 50vmin 0!important;
+}
+
+.container-fluid{
+	padding: 0 5px;
+}
+.navbar {
+	padding: 0 15px;
+}
+
+.navbar .navbar-header{
+	display: contents;
+	justify-content: space-between;
+}

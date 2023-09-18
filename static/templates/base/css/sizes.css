@@ -1,0 +1,25 @@
+/* 
+	There are four different combinators in CSS:
+
+	 - descendant selector (space)
+	 - child selector (>)
+	 - adjacent sibling selector (+)
+	 - general sibling selector (~) 
+	
+*/
+
+body{
+	height:100vh;
+}
+
+body .header{
+	height:15%;
+}
+
+body .main{
+	height:75%;
+}
+
+body .footer{
+	height:10%;
+}

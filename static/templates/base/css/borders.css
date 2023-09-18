@@ -1,0 +1,14 @@
+/* 
+	There are four different combinators in CSS:
+
+	 - descendant selector (space)
+	 - child selector (>)
+	 - adjacent sibling selector (+)
+	 - general sibling selector (~) 
+	
+*/
+
+.navbar {
+	border: 0;
+	border-radius: 0;
+}

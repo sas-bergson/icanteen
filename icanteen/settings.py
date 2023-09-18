@@ -47,11 +47,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'debug_toolbar',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -185,62 +188,71 @@ EMAIL_HOST_PASSWORD = 'yfmhdehvhuseicca'
 # This can include details such as a stack trace or an error code.
 
 
-LOGGING = {
-    'version': 1,
-     # The version number of our log
-    'disable_existing_loggers': False,
-    # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
-    # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
-    'formatters': {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
-        },
-    },
-    # "filters": {
-    #     "require_debug_true": {
-    #         "()": "django.utils.log.RequireDebugTrue",
-    #     },
-    # },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'email': {
-            'level': 'DEBUG',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'debug.log'),
-            'formatter': 'verbose',
-        },
-    },
-    # Define the root logger's settings
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-    },
-    # Define the django log module's settings
-    'loggers': {
-        'django': {
-            'handlers': ['console','file'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-            "propagate": True,
-        },
-        'users': {
-            'handlers': ['console','email','file'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-            "propagate": True,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#      # The version number of our log
+#     'disable_existing_loggers': False,
+#     # django uses some of its own loggers for internal operations. In case you want to disable them just replace the False above with true.
+#     # A handler for WARNING. It is basically writing the WARNING messages into a file called WARNING.log
+#     'formatters': {
+#         "verbose": {
+#             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+#             "style": "{",
+#         },
+#         "simple": {
+#             "format": "{levelname} {message}",
+#             "style": "{",
+#         },
+#     },
+#     # "filters": {
+#     #     "require_debug_true": {
+#     #         "()": "django.utils.log.RequireDebugTrue",
+#     #     },
+#     # },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple',
+#         },
+#         'email': {
+#             'level': 'DEBUG',
+#             'class': 'django.utils.log.AdminEmailHandler',
+#             'include_html': True,
+#         },
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': os.path.join(BASE_DIR, 'debug.log'),
+#             'formatter': 'verbose',
+#         },
+#     },
+#     # Define the root logger's settings
+#     'root': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG',
+#     },
+#     # Define the django log module's settings
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console','file'],
+#             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+#             "propagate": True,
+#         },
+#         'users': {
+#             'handlers': ['console','email','file'],
+#             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+#             "propagate": True,
+#         },
+#     },
+# }
+
+INTERNAL_IPS = [
+    'localhost', 
+    '127.0.0.1', 
+    '[::1]', 
+    '*'
+]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

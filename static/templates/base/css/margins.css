@@ -1,0 +1,273 @@
+/* 
+	There are four different combinators in CSS:
+
+	 - descendant selector (space)
+	 - child selector (>)
+	 - adjacent sibling selector (+)
+	 - general sibling selector (~) 
+	
+*/
+
+.mx-6 {
+    margin: 0 6vmin!important;
+}
+.mx-7 {
+    margin: 0 7vmin!important;
+}
+.mx-8 {
+    margin: 0 8vmin!important;
+}
+.mx-9 {
+    margin: 0 9vmin!important;
+}
+.mx-10 {
+    margin: 0 10vmin!important;
+}
+.mx-11 {
+    margin: 0 11vmin!important;
+}
+.mx-12 {
+    margin: 0 12vmin!important;
+}
+.mx-13 {
+    margin: 0 13vmin!important;
+}
+.mx-14 {
+    margin: 0 14vmin!important;
+}
+.mx-15 {
+    margin: 0 15vmin!important;
+}
+.mx-16 {
+    margin: 0 16vmin!important;
+}
+.mx-17 {
+    margin: 0 17vmin!important;
+}
+.mx-18 {
+    margin: 0 18vmin!important;
+}
+.mx-19 {
+    margin: 0 19vmin!important;
+}
+.mx-20 {
+    margin: 0 20vmin!important;
+}
+.mx-21 {
+    margin: 0 21vmin!important;
+}
+.mx-22 {
+    margin: 0 22vmin!important;
+}
+.mx-23 {
+    margin: 0 23vmin!important;
+}
+.mx-24 {
+    margin: 0 24vmin!important;
+}
+.mx-25 {
+    margin: 0 25vmin!important;
+}
+.mx-26 {
+    margin: 0 26vmin!important;
+}
+.mx-27 {
+    margin: 0 27vmin!important;
+}
+.mx-28 {
+    margin: 0 28vmin!important;
+}
+.mx-29 {
+    margin: 0 29vmin!important;
+}
+.mx-30 {
+    margin: 0 30vmin!important;
+}
+.mx-31 {
+    margin: 0 31vmin!important;
+}
+.mx-32 {
+    margin: 0 32vmin!important;
+}
+.mx-33 {
+    margin: 0 33vmin!important;
+}
+.mx-34 {
+    margin: 0 34vmin!important;
+}
+.mx-35 {
+    margin: 0 35vmin!important;
+}
+.mx-36 {
+    margin: 0 36vmin!important;
+}
+.mx-37 {
+    margin: 0 37vmin!important;
+}
+.mx-38 {
+    margin: 0 38vmin!important;
+}
+.mx-39 {
+    margin: 0 39vmin!important;
+}
+.mx-40 {
+    margin: 0 40vmin!important;
+}
+.mx-50 {
+    margin: 0 50vmin!important;
+}
+
+.my-6 {
+    margin: 6vmin 0!important;
+}
+.my-7 {
+    margin: 7vmin 0!important;
+}
+.my-8 {
+    margin: 8vmin 0!important;
+}
+.my-9 {
+    margin: 9vmin 0!important;
+}
+.my-10 {
+    margin: 10vmin 0!important;
+}
+.my-11 {
+    margin: 11vmin 0!important;
+}
+.my-12 {
+    margin: 12vmin 0!important;
+}
+.my-13 {
+    margin: 13vmin 0!important;
+}
+.my-14 {
+    margin: 14vmin 0!important;
+}
+.my-15 {
+    margin: 15vmin 0!important;
+}
+.my-16 {
+    margin: 16vmin 0!important;
+}
+.my-17 {
+    margin: 17vmin 0!important;
+}
+.my-18 {
+    margin: 18vmin 0!important;
+}
+.my-19 {
+    margin: 19vmin 0!important;
+}
+.my-20 {
+    margin: 20vmin 0!important;
+}
+.my-21 {
+    margin: 21vmin 0!important;
+}
+.my-22 {
+    margin: 22vmin 0!important;
+}
+.my-23 {
+    margin: 23vmin 0!important;
+}
+.my-24 {
+    margin: 24vmin 0!important;
+}
+.my-25 {
+    margin: 25vmin 0!important;
+}
+.my-26 {
+    margin: 26vmin 0!important;
+}
+.my-27 {
+    margin: 27vmin 0!important;
+}
+.my-28 {
+    margin: 28vmin 0!important;
+}
+.my-29 {
+    margin: 29vmin 0!important;
+}
+.my-30 {
+    margin: 30vmin 0!important;
+}
+.my-31 {
+    margin: 31vmin 0!important;
+}
+.my-32 {
+    margin: 32vmin 0!important;
+}
+.my-33 {
+    margin: 33vmin 0!important;
+}
+.my-34 {
+    margin: 34vmin 0!important;
+}
+.my-35 {
+    margin: 35vmin 0!important;
+}
+.my-36 {
+    margin: 36vmin 0!important;
+}
+.my-37 {
+    margin: 37vmin 0!important;
+}
+.my-38 {
+    margin: 38vmin 0!important;
+}
+.my-39 {
+    margin: 39vmin 0!important;
+}
+.my-40 {
+    margin: 40vmin 0!important;
+}
+.my-50 {
+    margin: 50vmin 0!important;
+}
+
+
+
+.mx-auto {
+	margin: 0 4vw!important;
+}
+
+@media (min-width: 420px){
+	.mx-auto {
+		margin: 0 9vw!important;
+	}
+}
+
+@media (min-width: 460px){
+	.mx-auto {
+		margin: 0 11vw!important;
+	}
+}
+
+@media (min-width: 480px){
+	.mx-auto {
+		margin: 0 13vw!important;
+	}
+}
+
+@media (min-width: 768px){
+	.mx-auto {
+		margin: 0 19vw!important;
+	}
+}
+
+@media (min-width: 992px){
+	.mx-auto {
+		margin: 0 28vw!important;
+	}
+}
+
+@media (min-width: 1200px){
+	.mx-auto {
+		margin: 0 30vw!important;
+	}
+}
+
+/* .navbar {
+	margin-bottom: 0;
+} */

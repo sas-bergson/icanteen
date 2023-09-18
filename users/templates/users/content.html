@@ -1,16 +1,17 @@
 {% load static %}
-<h3>Opening very soon !!!!</h3>
-<img class="img-responsive img-circle" 
-	style="display:inline" 
-	src="{% static "home/img/djangoDevelopersRocket.gif" %}" 
-	alt="Django Developers" height="140" width="210"
-	/>
-<h3>Hello, {{ user.username|default:'Guest' }}!</h3>
-<div>
+<div class="container pt-5">
+    <div class="d-flex justify-content-center"><h3>Opening very soon !!!!</h3></div>
+    <div class="d-flex justify-content-center"><img class="img-responsive img-circle" 
+        style="display:inline" 
+        src="{% static "home/img/djangoDevelopersRocket.gif" %}" 
+        alt="Django Developers" height="140" width="210"
+        />
+    </div>
+    <div class="d-flex justify-content-center"><h3>Hello, {{ user.username|default:'Guest' }}!</h3></div>
     {% if user.is_authenticated %}
-        <a href="{% url 'users:logout' %}">Logout</a>
-		<a href="{% url 'users:password_change' %}">Change password</a>
+        <div class="d-flex justify-content-center"><a href="{% url 'users:logout' %}">Logout</a></div>
+        <div class="d-flex justify-content-center"></div><a href="{% url 'users:password_change' %}">Change password</a></div>
     {% else %}
-        <a href="{% url 'users:login' %}">Login</a>
+        <div class="d-flex justify-content-center"><a href="{% url 'users:login' %}">Login</a></div>
     {% endif %}
 </div>
