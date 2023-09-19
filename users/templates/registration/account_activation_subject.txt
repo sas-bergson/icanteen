@@ -1,3 +1,3 @@
 {% load i18n %}{% autoescape off %}
-{% blocktranslate %}Account Activation reset on {{ site_name }}{% endblocktranslate %}
+{% blocktranslate %}Account activation request from {{ site_name }}{% endblocktranslate %}
 {% endautoescape %}

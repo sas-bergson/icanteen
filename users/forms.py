@@ -135,6 +135,9 @@ class SignUpForm(auth_forms.UserCreationForm):
     ):
         """ Generate a one-use only link for activating the account and send it to the user. """
         user = super().save(commit=True)       # create a new user model object
+        user.is_active = False
+        user.is_staff = False
+        user.save()
         user_email = self.cleaned_data["email"]
         if not domain_override:
             current_site = get_current_site(request)
