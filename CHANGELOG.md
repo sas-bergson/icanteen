@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [13.0.1] - 2023-09-18 (29 minutes ago)
+## [2.0.6] - 2023-09-18 (29 minutes ago)
 
 ### Fixed
 
@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - started signup activation form
 - fixed signup activation link
 
-## [13.0.1] - 2023-09-18 (20 hours ago)
+## [2.0.5] - 2023-09-18 (20 hours ago)
 
 ### Added
 
