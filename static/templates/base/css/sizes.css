@@ -8,18 +8,24 @@
 	
 */
 
+html,
 body{
-	height:100vh;
+	height:100%;
+}
+
+body{
+	display:flex;
+	flex-direction: column;
 }
 
 body .header{
 	height:15%;
 }
 
-body .main{
-	height:75%;
+body .content {
+	flex: 1 0 auto;
 }
 
 body .footer{
-	height:10%;
+	flex-shrink: 0;
 }

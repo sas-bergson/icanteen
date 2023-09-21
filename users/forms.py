@@ -21,7 +21,7 @@ class AuthenticationForm(auth_forms.AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'id_loginForm'
-        self.helper.form_class = 'blueForms'
+        self.helper.form_class = 'icanteenForms'
         self.helper.form_method = 'post'
         self.helper.form_action = None
         self.helper.add_input(Submit('submit', 'Sign In', css_class='btn-primary'))
@@ -32,7 +32,7 @@ class PasswordChangeForm(auth_forms.PasswordChangeForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'id_passwordChangeForm'
-        self.helper.form_class = 'blueForms'
+        self.helper.form_class = 'icanteenForms'
         self.helper.form_method = 'post'
         self.helper.form_action = None
         self.helper.add_input(Submit('submit', 'Change Password', css_class='btn-primary'))
@@ -43,7 +43,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'id_passwordResetForm'
-        self.helper.form_class = 'blueForms'
+        self.helper.form_class = 'icanteenForms'
         self.helper.form_method = 'post'
         self.helper.form_action = None
         self.helper.add_input(Submit('submit', 'Reset Password', css_class='btn-primary'))
@@ -54,7 +54,7 @@ class SetPasswordForm(auth_forms.SetPasswordForm):
         super().__init__(user, *args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'id_setPasswordForm'
-        self.helper.form_class = 'blueForms'
+        self.helper.form_class = 'icanteenForms'
         self.helper.form_method = 'post'
         self.helper.form_action = None
         self.helper.add_input(Submit('submit', 'set new Password', css_class='btn-primary'))
@@ -75,7 +75,7 @@ class SignUpForm(auth_forms.UserCreationForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'id_signUpForm'
-        self.helper.form_class = 'blueForms'
+        self.helper.form_class = 'icanteenForms'
         self.helper.form_method = 'post'
         self.helper.form_action = None
         self.helper.add_input(Submit('submit', 'Sign Up', css_class='btn-primary'))

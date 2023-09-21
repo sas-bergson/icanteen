@@ -3,10 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container pt-5">
-    <div class="d-flex justify-content-center"><h2>Login</h2></div>
+<div class="container pt-10 px-auto">
+    <div class="form-wrapper-bg1 px-5 shadow">
+        <div class="d-flex justify-content-center"><h2>Login</h2></div>
 
-    {% crispy form %}
+        {% crispy form %}
+
+    </div>
 
     <div class="d-flex justify-content-center"><a href="{% url 'users:password_reset' %}">I've forgotten my password</a></div>
     <div class="d-flex justify-content-center"><a href="{% url 'users:dashboard' %}">Back to dashboard</a></div>

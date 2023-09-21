@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.7] - 2023-09-19 (6 hours ago)
+
+### Completed
+
+- b51697f  sas-bergson: completed signup service
+- changelog update
+- updated changelog
+- added changelog
+
 ## [2.0.6] - 2023-09-18 (29 minutes ago)
 
 ### Fixed

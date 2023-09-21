@@ -2,13 +2,15 @@
 <html lang="en">
 	{% block head %}{%include 'base/head.html'%}{% endblock %}
 	<body>
-		<div class="container-fluid bg-1 text-center">
+		<header class="bg-dark">
 			{% block header %}{%include 'base/header.html'%}{% endblock %}
-			<div class="main bg-1">
-				{% block content %}{%include 'base/content.html'%}{% endblock %}
-			</div>
-			{% block footer %}{%include 'base/footer.html'%}{% endblock %}
-			{% block foot %}{%include 'base/foot.html'%}{% endblock %}
+		</header>
+		<div class="content bg-1">
+			{% block content %}{%include 'base/content.html'%}{% endblock %}
 		</div>
+		<footer class="bg-dark">
+			{% block footer %}{%include 'base/footer.html'%}{% endblock %}
+		</footer>
+		{% block foot %}{%include 'base/foot.html'%}{% endblock %}
 	</body>
 </html>

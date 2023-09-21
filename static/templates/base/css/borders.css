@@ -12,3 +12,27 @@
 	border: 0;
 	border-radius: 0;
 }
+
+.form-wrapper-bg1 {
+	display: block;
+    border-radius: 4px;
+    border: 1px #3A92CD solid;
+}
+
+.form-wrapper-bg2 {
+	display: block;
+    border-radius: 4px;
+    border: 1px #fff solid;
+}
+
+.form-wrapper-bg3 {
+	display: block;
+    border-radius: 4px;
+    border: 1px #555 solid;
+}
+
+.form-wrapper-bg4 {
+	display: block;
+    border-radius: 4px;
+    border: 1px #fff solid;
+}
