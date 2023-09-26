@@ -1,18 +1,33 @@
+
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+from django.core.paginator import (
+    Paginator, 
+    EmptyPage, 
+    PageNotAnInteger
+)
+from django.http import HttpResponse
+from django.db.models import Q
+from django.shortcuts import render,get_object_or_404
+from django.template import loader
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.generic import (
+    DetailView, 
+    ListView, 
+    UpdateView, 
+    CreateView
+)
+from django.views.generic.base import TemplateView
 import os
 from PIL import Image
-from .models import Product, Category
+import re
+
 from .forms import ProductForm, CategoryForm
+from .models import Product, Category
 from cart.forms import CartAddProductForm
-from django.shortcuts import render,get_object_or_404
-from django.conf import settings
-from django.template import loader
-from django.views.generic import DetailView, ListView, UpdateView, CreateView
-from django.db.models import Q
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
-from django.http import HttpResponse
-
 
 #gallery    default view
 def index(request):
@@ -52,50 +67,61 @@ def wall(request):
     return HttpResponse(template.render(context, request))
 
 #gallery/thumbnail/   view
-def thumbnail(request, img_url):
+def get_thumb_size(t_size='sm'):
+    if (t_size == 'sm'):
+        return 200
+    if (t_size == 'md'):
+        return 400
+    if (t_size == 'lg'):
+        return 500
+    if (t_size == 'xl'):
+        return 600
+    return 300
 
-    print("Hello")
-    print(img_url)
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail.html')
-    url_raw_split = img_url.split('/')
-    own_img_url = 'product/' + url_raw_split[1]
-
+def get_thumbnail(img_url, thumb_bg, t_size='sm'):
+    url_split = img_url.split('/')
+    img_url = 'product/'+url_split[len(url_split) - 1]
     #build the thumbnail if it does not exist
-    url_split = own_img_url.split('.')
-    img_thumb_url = url_split[0] + '_thumb.'+ url_split[1]
-
+    url_split = img_url.split('.')
+    thumb_url = url_split[0] + '_thumb.'+ url_split[1]
+    thumb_size = get_thumb_size(t_size)
+    print(f"thumb_url_ = {thumb_url} | thumb_size = {thumb_size}")
     try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_thumb_url),'rb')
+        fd_img = open(os.path.join(settings.MEDIA_ROOT,thumb_url),'rb')
         fd_img.close()
-        thumb_status = 'Thumb File was Found'
+        thumb_status = 'Thumb file was Found'
     except FileNotFoundError:
         try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,img_url),'rb')
+            url_split = re.split('_'+t_size+'.',img_url)
+            print(f"url_split = {url_split}")
+            if (len(url_split) > 1):
+                img_url = url_split[0]+'.'+url_split[1]
+            print(f"img_source = {img_url}")
+            fd_back = open(os.path.join(settings.MEDIA_ROOT, thumb_bg), 'rb')
+            fd_img = open(os.path.join(settings.MEDIA_ROOT, img_url),'rb')
             img_thumb = Image.open(fd_img)
             back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([300, 300])
-            if (img_thumb.size[0]<300) or (img_thumb.size[1]<300):
-                offsetH = (300 - img_thumb.size[0])//2
-                offsetW = (300 - img_thumb.size[1])//2
+            img_thumb.thumbnail([thumb_size, thumb_size])
+            if (img_thumb.size[0]<thumb_size) or (img_thumb.size[1]<thumb_size):
+                offsetH = (thumb_size - img_thumb.size[0])//2
+                offsetW = (thumb_size - img_thumb.size[1])//2
                 box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
                 back_thumb.paste(img_thumb, box)
                 img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_thumb_url), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
+            img_thumb.save(os.path.join(settings.MEDIA_ROOT,thumb_url), img_thumb.format)
+            thumb_status = 'Thumb file was not found and built was successful'
         except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
+            thumb_status = 'Thumb file was not found and built failed'
+    #prepare the context
+    thumbnail_data = {
+        'img_url':img_url,
+        'alt_url':'no-img.jpg', 
+        'thumb_url':thumb_url,
+        'thumb_size':thumb_size,
+        'thumb_status':thumb_status,
+    }
 
-        #prepare the context
-    context = {'request':request,'img_url':img_url, 'url_raw_0':url_raw_split[0],'url_raw_1':url_raw_split[1],
-              'own_img_url':own_img_url,'img_thumb_url':img_thumb_url,'thumb_status':thumb_status,
-              'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
+    return thumbnail_data
 
 
 def CartProduct_detail(request, id, slug):
@@ -106,697 +132,6 @@ def CartProduct_detail(request, id, slug):
             'cart_product_form': cart_product_form
         }
         return render(request, 'gallery/product_detail.html', context)
-
-
-#class ProductListView(ListView):
-#    model = Product
-#    paginate_by = 10
-
-
-
-class ProductCreateView(CreateView):
-    model = Product
-    form_class = ProductForm
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cart_product_form'] = CartAddProductForm()
-        return context
-
-
-
-class ProductDetailView(DetailView):
-    model = Product
-    paginate_by = 4
-
-
-
-class ProductUpdateView(UpdateView):
-    model = Product
-    form_class = ProductForm
-
-
-class CategoryListView(ListView):
-    model = Category
-
-class CategoryCreateView(CreateView):
-    model = Category
-    form_class = CategoryForm
-
-
-class CategoryDetailView(DetailView):
-    model = Category
-
-
-class CategoryUpdateView(UpdateView):
-    model = Category
-    form_class = CategoryForm
-
-
-
-def ExtraLargeThumb(request, img_extralarge):
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail_extra_large.html')
-
-    #creating image thumbnail
-    print("Hello")
-    print(img_extralarge)
-
-    url_raw_split = img_extralarge.split('_')
-    own_img_url = url_raw_split[0] + '.jpg'
-
-    img_extralarge = img_extralarge.split('/')
-    img_extralarge_thumb_url1 = img_extralarge[0] + '/' + img_extralarge[2]
-
-    #print(own_img_url)
-    #img_extralarge_split = own_img_url.split('.')
-    #img_extralarge_thumb_url = img_extralarge_split[0] + '_extralargethumb.' + img_extralarge_split[1]
-    #img_extralarge_thumb_url_split = img_extralarge_thumb_url.split('/')
-    #img_extralarge_thumb_url1 = img_extralarge_thumb_url_split[0] + '/' + img_extralarge_thumb_url_split[2]
-    #print("helloooo2")
-    #print(img_extralarge_thumb_url1)
-
-    #print("helloooooooooooo3")
-    #print(img_extralarge_thumb_url)
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_extralarge_thumb_url1),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb_extralarge5.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,own_img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([500, 500])
-            if (img_thumb.size[0]<500) or (img_thumb.size[1]<500):
-                offsetH = (500 - img_thumb.size[0])//2
-                offsetW = (500 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_extralarge_thumb_url1), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_extralarge':img_extralarge,'img_extralarge_thumb_url1':img_extralarge_thumb_url1,'own_img_url':own_img_url,
-               'thumb_status':thumb_status,'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-def LargeThumb(request, img_large):
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail_large.html')
-
-    #creating image thumbnail
-    print("Hello")
-    print(img_large)
-
-    url_raw_split = img_large.split('_')
-
-    own_img_url = url_raw_split[0] + '.jpg'
-    print("Hello2")
-    print(own_img_url)
-
-    #img_large = img_large.split('/')
-    #img_large_thumb_url1 = img_large[0] + '/' + img_large[2]
-
-
-
-    img_large_split = own_img_url.split('.')
-    img_large_thumb_url = img_large_split[0] + '_largethumb.' + img_large_split[1]
-
-    print("helloooooooooooo3")
-    print(img_large_thumb_url)
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_large_thumb_url),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb_extralarge4.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,own_img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([400, 400])
-            if (img_thumb.size[0]<400) or (img_thumb.size[1]<400):
-                offsetH = (400 - img_thumb.size[0])//2
-                offsetW = (400 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_large_thumb_url), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_large':img_large,'img_large_thumb_url':img_large_thumb_url,'own_img_url':own_img_url,
-               'thumb_status':thumb_status,'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-
-
-def MediumThumb(request, img_medium):
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail_medium.html')
-
-    #creating image thumbnail
-    print("Hello")
-    print(img_medium)
-
-    url_raw_split = img_medium.split('_')
-    own_img_url = url_raw_split[0] + '.jpg'
-
-    img_medium = img_medium.split('/')
-    img_medium_thumb_url1 = img_medium[0] + '/' + img_medium[2]
-
-    #print(own_img_url)
-    #img_extralarge_split = own_img_url.split('.')
-    #img_extralarge_thumb_url = img_extralarge_split[0] + '_extralargethumb.' + img_extralarge_split[1]
-    #img_extralarge_thumb_url_split = img_extralarge_thumb_url.split('/')
-    #img_extralarge_thumb_url1 = img_extralarge_thumb_url_split[0] + '/' + img_extralarge_thumb_url_split[2]
-    #print("helloooo2")
-    #print(img_extralarge_thumb_url1)
-
-    #print("helloooooooooooo3")
-    #print(img_extralarge_thumb_url)
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_medium_thumb_url1),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb_extralarge5.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,own_img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([500, 500])
-            if (img_thumb.size[0]<500) or (img_thumb.size[1]<500):
-                offsetH = (500 - img_thumb.size[0])//2
-                offsetW = (500 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_medium_thumb_url1), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_medium':img_medium,'img_medium_thumb_url1':img_medium_thumb_url1,'own_img_url':own_img_url,
-               'thumb_status':thumb_status,'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-def SmallThumb(request, img_small):
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail_small.html')
-
-    #creating image thumbnail
-    print("Hello")
-    print(img_small)
-
-    url_raw_split = img_small.split('_')
-    own_img_url = url_raw_split[0] + '.jpg'
-
-    img_small = img_small.split('/')
-    img_small_thumb_url1 = img_small[0] + '/' + img_small[2]
-
-    #print(own_img_url)
-    #img_extralarge_split = own_img_url.split('.')
-    #img_extralarge_thumb_url = img_extralarge_split[0] + '_extralargethumb.' + img_extralarge_split[1]
-    #img_extralarge_thumb_url_split = img_extralarge_thumb_url.split('/')
-    #img_extralarge_thumb_url1 = img_extralarge_thumb_url_split[0] + '/' + img_extralarge_thumb_url_split[2]
-    #print("helloooo2")
-    #print(img_extralarge_thumb_url1)
-
-    #print("helloooooooooooo3")
-    #print(img_extralarge_thumb_url)
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_small_thumb_url1),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb_extralarge5.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,own_img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([500, 500])
-            if (img_thumb.size[0]<500) or (img_thumb.size[1]<500):
-                offsetH = (500 - img_thumb.size[0])//2
-                offsetW = (500 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_small_thumb_url1), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_small':img_small,'img_small_thumb_url1':img_small_thumb_url1,'own_img_url':own_img_url,
-               'thumb_status':thumb_status,'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-def ListThumb(request, img_url):
-
-    print("Hello")
-    print(img_url)
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail.html')
-    url_raw_split = img_url.split('/')
-    own_img_url = 'product/' + url_raw_split[1]
-
-    #build the thumbnail if it does not exist
-    url_split = own_img_url.split('.')
-    img_thumb_url = url_split[0] + '_thumb.'+ url_split[1]
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_thumb_url),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([300, 300])
-            if (img_thumb.size[0]<300) or (img_thumb.size[1]<300):
-                offsetH = (300 - img_thumb.size[0])//2
-                offsetW = (300 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_thumb_url), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_url':img_url, 'url_raw_0':url_raw_split[0],'url_raw_1':url_raw_split[1],
-              'own_img_url':own_img_url,'img_thumb_url':img_thumb_url,'thumb_status':thumb_status,
-              'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-
-def DetailThumb(request, img_url):
-
-    print("Hello")
-    print(img_url)
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail.html')
-    url_raw_split = img_url.split('/')
-    own_img_url = 'product/' + url_raw_split[1]
-
-    #build the thumbnail if it does not exist
-    url_split = own_img_url.split('.')
-    img_thumb_url = url_split[0] + '_thumb.'+ url_split[1]
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_thumb_url),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([300, 300])
-            if (img_thumb.size[0]<300) or (img_thumb.size[1]<300):
-                offsetH = (300 - img_thumb.size[0])//2
-                offsetW = (300 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_thumb_url), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_url':img_url, 'url_raw_0':url_raw_split[0],'url_raw_1':url_raw_split[1],
-              'own_img_url':own_img_url,'img_thumb_url':img_thumb_url,'thumb_status':thumb_status,
-              'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-
-def TileThumb(request, img_url):
-
-    print("Hello")
-    print(img_url)
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail.html')
-    url_raw_split = img_url.split('/')
-    own_img_url = 'product/' + url_raw_split[1]
-
-    #build the thumbnail if it does not exist
-    url_split = own_img_url.split('.')
-    img_thumb_url = url_split[0] + '_thumb.'+ url_split[1]
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_thumb_url),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([300, 300])
-            if (img_thumb.size[0]<300) or (img_thumb.size[1]<300):
-                offsetH = (300 - img_thumb.size[0])//2
-                offsetW = (300 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_thumb_url), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_url':img_url, 'url_raw_0':url_raw_split[0],'url_raw_1':url_raw_split[1],
-              'own_img_url':own_img_url,'img_thumb_url':img_thumb_url,'thumb_status':thumb_status,
-              'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-
-def ContentThumb(request, img_url):
-
-    print("Hello")
-    print(img_url)
-
-    #prepare the models
-    #        empty
-    #prepare the template
-    template = loader.get_template('gallery/thumbnail.html')
-    url_raw_split = img_url.split('/')
-    own_img_url = 'product/' + url_raw_split[1]
-
-    #build the thumbnail if it does not exist
-    url_split = own_img_url.split('.')
-    img_thumb_url = url_split[0] + '_thumb.'+ url_split[1]
-
-    try:
-        fd_img = open(os.path.join(settings.MEDIA_ROOT,img_thumb_url),'rb')
-        fd_img.close()
-        thumb_status = 'Thumb File was Found'
-    except FileNotFoundError:
-        try:
-            fd_back = open(os.path.join(settings.MEDIA_ROOT,'transparent_thumb.jpg'), 'rb')
-            fd_img = open(os.path.join(settings.MEDIA_ROOT,img_url),'rb')
-            img_thumb = Image.open(fd_img)
-            back_thumb = Image.open(fd_back)
-            img_thumb.thumbnail([300, 300])
-            if (img_thumb.size[0]<300) or (img_thumb.size[1]<300):
-                offsetH = (300 - img_thumb.size[0])//2
-                offsetW = (300 - img_thumb.size[1])//2
-                box = (offsetH, offsetW, img_thumb.size[0]+offsetH, img_thumb.size[1]+offsetW)
-                back_thumb.paste(img_thumb, box)
-                img_thumb = back_thumb
-            img_thumb.save(os.path.join(settings.MEDIA_ROOT,img_thumb_url), img_thumb.format)
-            thumb_status = 'Thumb File was not Found but built'
-        except FileNotFoundError:
-            thumb_status = 'Thumb File was not Found but built lead to failure'
-
-        #prepare the context
-    context = {'request':request,'img_url':img_url, 'url_raw_0':url_raw_split[0],'url_raw_1':url_raw_split[1],
-              'own_img_url':own_img_url,'img_thumb_url':img_thumb_url,'thumb_status':thumb_status,
-              'media_root':settings.MEDIA_ROOT,'media_url':settings.MEDIA_URL}
-
-    return HttpResponse(template.render(context, request))
-
-
-def ExtraLargeView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 4)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_extralarge_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-
-
-def LargeView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 4)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_large_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-def MediumView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 6)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_medium_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-def SmallView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 8)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_small_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-
-def ListView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 4)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_list_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-
-def DetailView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 4)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_detail_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-
-def TileView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 4)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_tile_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-
-def ContentView(request, category_slug=None):
-
-    category = None
-    categories = Category.objects.all()
-    object_list = Product.objects.order_by('-created')
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(object_list, 4)
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-
-    if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-    return render(request,'gallery/product_content_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'object_list':object_list})
-
-
-
-def ProductList(request, category_slug=None):
-
-        category = None
-        categories = Category.objects.all()
-        object_list = Product.objects.order_by('-created')
-        cart_product_form = CartAddProductForm()
-
-
-        page = request.GET.get('page', 1)
-        paginator = Paginator(object_list, 8)
-        try:
-            object_list = paginator.page(page)
-        except PageNotAnInteger:
-            object_list = paginator.page(1)
-        except EmptyPage:
-            object_list = paginator.page(paginator.num_pages)
-
-
-        if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            object_list = Product.objects.filter(category=category)
-
-        return render(request,'gallery/product_list.html',
-                              {'category': category,
-                               'categories': categories,
-                               'cart_product_form': cart_product_form,
-                               'object_list':object_list})
 
 
 def product_detail(request, id, slug):
@@ -813,3 +148,174 @@ def product_detail(request, id, slug):
                   'shop/product/detail.html',
                   context)
                   #{'product': product}
+
+
+class ThumbnailView(TemplateView):
+    template_name = 'gallery/thumbnail.html'
+    thumb_bg_template = 'transparent_thumb.jpg'
+    t_size = 'default'
+
+    def get(self, *args, **kwargs):
+        if "img_url" not in kwargs:
+            raise ImproperlyConfigured(
+                "The URL path must contain 'img_url' parameter."
+            )
+        img_url = kwargs.get('img_url', None)
+        print(f"img_url = {img_url}")
+        thumb_data = get_thumbnail(img_url, self.thumb_bg_template, self.t_size)
+        self.extra_context = {
+            'img_url':thumb_data['img_url'],
+            'alt_url':thumb_data['alt_url'],
+            'thumb_url':thumb_data['thumb_url'],
+            'thumb_size':thumb_data['thumb_size'],
+            'thumb_status':thumb_data['thumb_status'],
+            'media_root':settings.MEDIA_ROOT,
+            'media_url':settings.MEDIA_URL
+        }
+
+        return super().get(*args, **kwargs)
+
+
+class SmallThumbnailView(ThumbnailView):
+    thumb_bg_template = 'transparent_sm_thumb.jpg'
+    t_size = 'sm'
+
+
+class MediumThumbnailView(ThumbnailView):
+    thumb_bg_template = 'transparent_md_thumb.jpg'
+    t_size = 'md'
+
+
+class LargeThumbnailView(ThumbnailView):
+    thumb_bg_template = 'transparent_lg_thumb.jpg'
+    t_size = 'lg'
+
+
+class ExtraLargeThumbnailView(ThumbnailView):
+    thumb_bg_template = 'transparent_xl_thumb.jpg'
+    t_size = 'xl'
+
+
+class ProductListView(TemplateView):
+    template_name = 'gallery/product_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 8)
+
+    def get(self, *args, **kwargs):
+        
+        category = None
+        categories = Category.objects.all()
+        cart_product_form = CartAddProductForm()
+
+        page = self.request.GET.get('page', 1)
+        try:
+            object_list = self.paginator.page(page)
+        except PageNotAnInteger:
+            object_list = self.paginator.page(1)
+        except EmptyPage:
+            object_list = self.paginator.page(self.paginator.num_pages)
+
+        category_slug = kwargs.get('category_slug', None)
+
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug)
+            object_list = Product.objects.filter(category=category)
+
+        self.extra_context = {
+            'category': category,
+            'categories': categories,
+            'cart_product_form': cart_product_form,
+            'object_list':object_list
+        }
+        return super().get(*args, **kwargs)
+
+
+# display list with small-size thumbnails allowing for pagination of 12 items per page
+class ProductListSmallView(ProductListView):
+    template_name = 'gallery/product_small_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 12)
+
+
+# display list with medium-size thumbnails allowing for pagination of 06 items per page
+class ProductListMediumView(ProductListView):
+    template_name = 'gallery/product_medium_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 6)
+
+
+# display list with large-size thumbnails allowing for pagination of 04 items per page
+class ProductListLargeView(ProductListView):
+    template_name = 'gallery/product_large_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 4)
+
+
+# display list with extra-large-size thumbnails allowing for pagination of 02 items per page
+class ProductListExtraLargeView(ProductListView):
+    template_name = 'gallery/product_extralarge_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 2)
+
+
+# display list with large-size thumbnails and extra few details 
+# allowing for pagination of 04 items per page
+class ProductListListView(ProductListView):
+    template_name = 'gallery/product_list_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 4)
+
+
+class ProductListDetailView(ProductListView):
+    template_name = 'gallery/product_list_detail.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 4)
+
+
+class ProductListTileView(ProductListView):
+    template_name = 'gallery/product_tile_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 4)
+
+
+class ProductListContentView(ProductListView):
+    template_name = 'gallery/product_content_list.html'
+    object_list = Product.objects.order_by('-created')
+    paginator = Paginator(object_list, 4)
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cart_product_form'] = CartAddProductForm()
+        return context
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    # paginate_by = 4
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+
+
+class CategoryListView(ListView):
+    model = Category
+
+
+class CategoryCreateView(CreateView):
+    model = Category
+    form_class = CategoryForm
+
+
+class CategoryDetailView(DetailView):
+    model = Category
+
+
+class CategoryUpdateView(UpdateView):
+    model = Category
+    form_class = CategoryForm

@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'crispy_forms',
     'crispy_bootstrap4',
 ]
@@ -247,12 +247,12 @@ EMAIL_HOST_PASSWORD = 'yfmhdehvhuseicca'
 #     },
 # }
 
-INTERNAL_IPS = [
-    'localhost', 
-    '127.0.0.1', 
-    '[::1]', 
-    '*'
-]
+# INTERNAL_IPS = [
+#     'localhost', 
+#     '127.0.0.1', 
+#     '[::1]', 
+#     '*'
+# ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

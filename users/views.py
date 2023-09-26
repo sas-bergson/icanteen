@@ -1,6 +1,9 @@
-from django.contrib.auth import get_user_model, \
-                                login as auth_login, \
-                                views as auth_views
+
+from django.contrib.auth import (
+    get_user_model,
+    login as auth_login,
+    views as auth_views
+)
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import  ImproperlyConfigured, \
                                     ValidationError
@@ -34,7 +37,7 @@ class DashboardView(auth_views.RedirectURLMixin, TemplateView):
 class LoginView(auth_views.LoginView):
     """ Display the login form and handle the login action."""
     form_class = AuthenticationForm
-    template_name = "auth/login.html"
+    template_name = "auth/login_form.html"
 
 class LogoutView(auth_views.LogoutView):
     """ Display the log out page."""
@@ -66,7 +69,7 @@ class PasswordResetView(auth_views.PasswordResetView):
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     """ Display the Password Reset Form."""
     form_class = SetPasswordForm
-    template_name = "auth/password_reset_confirm.html"
+    template_name = "auth/password_reset_confirm_form.html"
     success_url = reverse_lazy('users:password_reset_complete')
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):

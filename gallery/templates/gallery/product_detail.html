@@ -37,12 +37,12 @@
           <p><img src="{{object.image_url}}" style="width:450px;height:350px; "></p>
       </div>
     <h3 class = "name" style = "color:#474E5D">{{ object.designation }}</h3>
-      <p><form class = "display" action="{% url "cart:cart_add" object.id %}" method="post">
+      <p><form class = "display" action="{% url "cart:add" object.id %}" method="post">
                                 {% csrf_token %}
                                 {{ cart_product_form }}
                                 <input type="submit" value="add to cart" class="btn btn-primary" style = "background-color:#474E5D; margin-bottom:5px;">
                             </form></p>
-    <p class = "display"><a class="btn btn-primary" href="{% url 'product_list' %}" style = "margin-bottom:20px; background-color:#474E5D;">View products List</a></p>
+    <p class = "display"><a class="btn btn-primary" href="{% url 'gallery:product_list' %}" style = "margin-bottom:20px; background-color:#474E5D;">View products List</a></p>
    </div>
 
 <div class = "col-sm-6">
